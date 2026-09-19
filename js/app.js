@@ -28,9 +28,15 @@ let pr = {
   D_losa: 250, D_base: 150
 };
 
-let transito = { TPD: 5000, factorCamion: 0.15, factorCrec: 0.03, anios: 20, factorEjes: 0.8, carril: 0.5 };
-let vehiculos = { bus: 200, c2: 150, c3: 100, c4: 80, c5: 60, c6: 40 };
-
+let transito = {
+    TPD: 5000,
+    factorCamion: 0.15,
+    factorCrec: 0.03,
+    anios: 20,
+    factorEjes: 0.8,
+    factorDireccional: 0.50,
+    carril: 0.50
+};
 function setStatus(msg, cls) {
   const el = document.getElementById('status-txt');
   el.innerHTML = cls ? `<span class="${cls}">${msg}</span>` : msg;
