@@ -37,6 +37,7 @@ let transito = {
     factorDireccional: 0.50,
     carril: 0.50
 };
+
 let vehiculos = {
     bus: 200,
     c2: 150,
