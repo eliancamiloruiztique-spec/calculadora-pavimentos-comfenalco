@@ -357,7 +357,7 @@ function renderVehiculosGrid() {
     d.className = 'param-row';
 
     d.innerHTML = `
-      <label>${t.label} — vehículos/día</label>
+      <label>${t.label} — vehiculos/dia</label>
 
       <input
         type="number"
@@ -408,6 +408,7 @@ function renderVehiculosGrid() {
   });
 
   actualizarTotalVehiculos();
+
 }
 
 function actualizarTotalVehiculos() {
