@@ -46,6 +46,17 @@ let vehiculos = {
     c5: 60,
     c6: 40
 };
+
+let factoresEjes = {
+  bus: 0.80,
+  c2: 0.80,
+  c3: 0.80,
+  c4: 0.80,
+  c5: 0.80,
+  c6: 0.80
+};
+
+let resumenTransito = null;
 function setStatus(msg, cls) {
   const el = document.getElementById('status-txt');
   el.innerHTML = cls ? `<span class="${cls}">${msg}</span>` : msg;
