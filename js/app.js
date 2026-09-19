@@ -1,239 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AASHTO-93 – Diseño de Pavimento v5.0</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+// Acceso publico: la calculadora no requiere contrasena ni registro.
 
-  :root {
-    --bg: #0f1117;
-    --bg2: #181c27;
-    --bg3: #1f2435;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --accent: #3b82f6;
-    --accent2: #60a5fa;
-    --green: #22c55e;
-    --amber: #f59e0b;
-    --red: #ef4444;
-    --text: #e2e8f0;
-    --text2: #94a3b8;
-    --text3: #64748b;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 20px;
-  }
-
-  #app { max-width: 950px; margin: 0 auto; }
-
-  #portada {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1000;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-  }
-  #portada.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .portada-box {
-    max-width: 600px; text-align: center; padding: 40px;
-    border: 1px solid var(--border2); border-radius: 16px;
-    background: var(--bg2); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-  }
-  .portada-box .logo { font-family: var(--mono); font-size: 14px; color: var(--accent2); letter-spacing: 2px; margin-bottom: 8px; }
-  .portada-box h1 { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-  .portada-box .sub { font-family: var(--mono); font-size: 13px; color: var(--text3); margin-bottom: 24px; }
-  .portada-box .vers { font-family: var(--mono); font-size: 11px; color: var(--text3); background: var(--bg3); padding: 4px 12px; border-radius: 4px; display: inline-block; margin-bottom: 20px; }
-  .portada-box .desc { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 24px; text-align: left; padding: 0 10px; }
-  .portada-box .desc strong { color: var(--accent2); }
-  .portada-box .btn-entrar { font-family: var(--mono); font-size: 14px; font-weight: 600; padding: 12px 40px; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s; }
-  .portada-box .btn-entrar:hover { background: var(--accent2); }
-
-  .app-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px; background: var(--bg2);
-    border: 1px solid var(--border); border-radius: 12px 12px 0 0; border-bottom: none;
-  }
-  .app-title { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent2); letter-spacing: .5px; }
-  .app-subtitle { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-  .tipo-badge { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; background: rgba(59,130,246,0.15); color: var(--accent2); border: 1px solid rgba(59,130,246,0.3); letter-spacing: 1px; }
-
-  #cv-wrap { background: #1a2a3a; border-left: 1px solid var(--border); border-right: 1px solid var(--border); overflow: hidden; }
-  #cv { display: block; width: 100%; height: auto; }
-
-  .menu-bar {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    padding: 10px 14px; background: var(--bg2);
-    border: 1px solid var(--border); border-top: none; border-bottom: none;
-  }
-  .mbtn {
-    font-family: var(--mono); font-size: 10px; font-weight: 600;
-    padding: 6px 12px; border: 1px solid var(--border2); background: var(--bg3);
-    color: var(--text2); border-radius: 6px; cursor: pointer;
-    transition: all .15s; letter-spacing: .3px;
-  }
-  .mbtn:hover { background: rgba(59,130,246,0.12); color: var(--accent2); border-color: rgba(59,130,246,0.4); }
-  .mbtn.active { background: rgba(59,130,246,0.2); color: var(--accent2); border-color: var(--accent); }
-  .mbtn.calc { background: rgba(34,197,94,0.12); color: var(--green); border-color: rgba(34,197,94,0.4); }
-  .mbtn.calc:hover { background: rgba(34,197,94,0.22); }
-  .mbtn.informe { background: rgba(168,85,247,0.12); color: #c084fc; border-color: rgba(168,85,247,0.4); }
-  .mbtn.informe:hover { background: rgba(168,85,247,0.22); }
-
-  .status-bar {
-    padding: 6px 16px; background: var(--bg2);
-    border: 1px solid var(--border); border-top: 1px solid var(--border); border-bottom: none;
-    font-family: var(--mono); font-size: 11px; color: var(--text3);
-  }
-  .status-bar .ok { color: var(--green); }
-  .status-bar .err { color: var(--red); }
-  .status-bar .info { color: var(--accent2); }
-
-  .panel {
-    background: var(--bg2); border: 1px solid var(--border); border-top: none;
-    padding: 18px 20px; display: none;
-  }
-  .panel:last-child { border-radius: 0 0 12px 12px; }
-  .panel h3 { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-
-  .param-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
-  .param-row { display: flex; flex-direction: column; gap: 4px; }
-  .param-row label { font-size: 10px; color: var(--text3); font-family: var(--mono); }
-  .param-row input, .param-row select {
-    background: var(--bg3); border: 1px solid var(--border2);
-    color: var(--text); font-family: var(--mono); font-size: 12px;
-    padding: 6px 8px; border-radius: 6px; outline: none;
-    transition: border-color .15s;
-  }
-  .param-row input:focus, .param-row select:focus { border-color: var(--accent); }
-
-  .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px; }
-  .res-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-  .res-card .lbl { font-family: var(--mono); font-size: 9px; color: var(--text3); margin-bottom: 4px; }
-  .res-card .val { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--text); }
-  .res-card .val.highlight { color: var(--green); }
-  .res-card .sub { font-size: 10px; color: var(--text3); font-family: var(--mono); margin-top: 2px; }
-
-  .capas-table { width: 100%; border-collapse: collapse; font-size: 11px; font-family: var(--mono); }
-  .capas-table th { text-align: left; padding: 6px 10px; background: var(--bg3); font-size: 9px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); }
-  .capas-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-  .capas-table tr:last-child td { border-bottom: none; }
-  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
-  .val-mm { color: var(--accent2); font-weight: 600; }
-  .val-in { color: var(--text3); }
-
-  .formula-box { margin-top: 16px; padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--accent); }
-  .formula-box h4 { font-family: var(--mono); font-size: 11px; color: var(--accent2); margin-bottom: 6px; }
-  .formula-box p { font-family: var(--mono); font-size: 10px; color: var(--text3); line-height: 1.7; }
-
-  .app-footer { background: var(--bg2); border: 1px solid var(--border); border-top: 1px solid var(--border); border-radius: 0 0 12px 12px; padding: 8px 16px; font-family: var(--mono); font-size: 9px; color: var(--text3); text-align: right; }
-  .panel + .panel { border-top: 1px solid var(--border); }
-
-  .transito-method { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-  .transito-method .mbtn { font-size: 10px; }
-  .transito-method .mbtn.active { background: rgba(59,130,246,0.2); color: var(--accent2); border-color: var(--accent); }
-  .param-group { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; background: var(--bg3); }
-  .param-group .group-title { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .param-group .param-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-
-  .vehiculos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 6px; }
-  .vehiculos-grid .param-row input { font-size: 11px; padding: 4px 6px; }
-  .vehiculos-grid .param-row label { font-size: 9px; }
-</style>
-</head>
-<body>
-
-<div id="portada">
-  <div class="portada-box">
-    <div class="logo">⛰️ ASIGNATURA</div>
-    <h1>DISEÑO DE PAVIMENTOS</h1>
-    <div class="sub">FUNDACIÓN UNIVERSITARIA TECNOLÓGICO COMFENALCO</div>
-    <div class="vers">v5.0 · Flexible / Rígido</div>
-    <div class="desc">
-      <strong>Dos métodos de tránsito:</strong><br>
-      • <strong>ESAL</strong> — Ejes equivalentes (W18)<br>
-      • <strong>Tránsito</strong> — TPD, tasa crecimiento, años<br><br>
-      <strong>Características:</strong><br>
-      • Cálculo automático de espesores<br>
-      • Visualización 3D de la sección<br>
-      • Parámetros AASHTO-93 completos<br>
-      • Generación de informe técnico
-    </div>
-    <button class="btn-entrar" onclick="entrarApp()">▶ INGRESAR</button>
-  </div>
-</div>
-
-<div id="app" style="display:none;">
-  <div class="app-header">
-    <div>
-      <div class="app-title">AASHTO-93 — DISEÑO DE PAVIMENTO</div>
-      <div class="app-subtitle">Flexible &amp; Rígido · v5.0</div>
-    </div>
-    <div class="tipo-badge" id="hdr-tipo">FLEXIBLE</div>
-  </div>
-
-  <div id="cv-wrap">
-    <canvas id="cv" width="900" height="260"></canvas>
-  </div>
-
-  <div class="menu-bar">
-    <button class="mbtn active" id="btn-flex" onclick="setTipo('flexible')">Flexible</button>
-    <button class="mbtn" id="btn-rig" onclick="setTipo('rigido')">Rígido</button>
-    <button class="mbtn" onclick="togglePanel('params-panel')">⚙ Parámetros</button>
-    <button class="mbtn calc" onclick="calcular()">▶ Calcular</button>
-    <button class="mbtn" onclick="togglePanel('results-panel')">≡ Resultados</button>
-    <button class="mbtn informe" onclick="generarInforme()">📄 Informe Técnico</button>
-    <button class="mbtn" onclick="ejemploFlex()">Ejemplo flex.</button>
-    <button class="mbtn" onclick="ejemploRig()">Ejemplo ríg.</button>
-  </div>
-
-  <div class="status-bar"><span id="status-txt">AASHTO-93 v5.0 · Seleccione tipo de pavimento y presione Calcular</span></div>
-
-  <div class="panel" id="params-panel">
-    <h3 id="params-title">Parámetros – flexible</h3>
-    <div class="param-group">
-      <div class="group-title">Método de tránsito</div>
-      <div class="transito-method">
-        <button class="mbtn active" id="metodo-esal" onclick="setMetodo('esal')">ESAL (W18)</button>
-        <button class="mbtn" id="metodo-transito" onclick="setMetodo('transito')">Tránsito (TPD → ESAL)</button>
-      </div>
-    </div>
-    <div class="param-grid" id="params-grid"></div>
-    <div id="transito-params" style="display:none;" class="param-group">
-      <div class="group-title">Parámetros de tránsito</div>
-      <div class="param-grid" id="transito-grid"></div>
-      <div style="margin-top:12px;">
-        <div class="group-title" style="margin-bottom:4px;">Conteo de vehículos comerciales y EALF</div>
-        <div class="vehiculos-grid" id="vehiculos-grid"></div>
-        <div style="margin-top:8px; font-size:10px; color:var(--text3); font-family:var(--mono);">
-          <span id="total-vehiculos">Total vehículos comerciales: 0</span>
-        </div>
-      </div>
-    </div>
-    <div class="formula-box" id="formula-box"></div>
-  </div>
-
-  <div class="panel" id="results-panel">
-    <h3 id="res-title">Resultados del diseño</h3>
-    <div class="res-grid" id="res-grid"></div>
-    <table class="capas-table" id="capas-table"></table>
-    <div id="sugerencia-resultado" style="margin-top:16px; padding:14px 18px; border-radius:8px; font-family:var(--mono); font-size:11px; line-height:1.7;"></div>
-  </div>
-
-  <div class="app-footer">Implementación AASHTO Guide for Design of Pavement Structures, 1993 · Solo uso académico/referencial</div>
-</div>
-
-<script>
 const cv = document.getElementById('cv');
 const ctx = cv.getContext('2d');
 const W = 900, H = 260;
@@ -291,8 +57,13 @@ let factoresEjes = {
 
 let resumenTransito = null;
 
+// ============================================================
+//  UTILIDADES DE UI
+// ============================================================
+
 function setStatus(msg, cls) {
   const el = document.getElementById('status-txt');
+  if (!el) return;
   el.innerHTML = cls ? `<span class="${cls}">${msg}</span>` : msg;
 }
 
@@ -304,8 +75,9 @@ function setTipo(t) {
   document.getElementById('hdr-tipo').textContent = t.toUpperCase();
   setStatus('Modo cambiado a: ' + t.toUpperCase(), 'info');
   const pp = document.getElementById('params-panel');
-  if (pp.style.display === 'block') renderParams();
-  document.getElementById('results-panel').style.display = 'none';
+  if (pp && pp.style.display === 'block') renderParams();
+  const rp = document.getElementById('results-panel');
+  if (rp) rp.style.display = 'none';
 }
 
 function setMetodo(m) {
@@ -319,6 +91,7 @@ function setMetodo(m) {
 
 function togglePanel(id) {
   const el = document.getElementById(id);
+  if (!el) return;
   const open = el.style.display === 'block';
   el.style.display = open ? 'none' : 'block';
   if (!open && id === 'params-panel') renderParams();
@@ -329,9 +102,13 @@ function togglePanel(id) {
 }
 
 function entrarApp() {
-  document.getElementById('portada').classList.add('hidden');
-  document.getElementById('app').style.display = 'block';
+  const app = document.getElementById('app');
+  if (app) app.scrollIntoView({behavior:'smooth', block:'start'});
 }
+
+// ============================================================
+//  CÁLCULO ESAL DESDE TRÁNSITO
+// ============================================================
 
 function calcularESALdesdeTransito() {
   const TPD = Number(transito.TPD);
@@ -351,9 +128,8 @@ function calcularESALdesdeTransito() {
     setStatus('Revise los datos de tránsito ingresados.', 'err');
     return null;
   }
-
   if (TPD <= 0) { setStatus('El TPD debe ser mayor que cero.', 'err'); return null; }
-  if (factorCamion < 0 || factorCamion > 1) { setStatus('El % de vehículos comerciales debe estar entre 0 y 100%.', 'err'); return null; }
+  if (factorCamion < 0 || factorCamion > 1) { setStatus('El porcentaje de vehículos comerciales debe estar entre 0 y 100%.', 'err'); return null; }
   if (factorCrec <= -1) { setStatus('La tasa de crecimiento no puede ser ≤ -100%.', 'err'); return null; }
   if (anios <= 0) { setStatus('El período de diseño debe ser mayor que cero.', 'err'); return null; }
   if (factorEjes <= 0) { setStatus('El factor de ejes equivalentes debe ser mayor que cero.', 'err'); return null; }
@@ -393,9 +169,15 @@ function calcularESALdesdeTransito() {
   return Math.round(W18);
 }
 
+// ============================================================
+//  RENDERIZADO DE PARÁMETROS
+// ============================================================
+
 function renderParams() {
   const grid = document.getElementById('params-grid');
   const fbox = document.getElementById('formula-box');
+  if (!grid) return;
+
   document.getElementById('params-title').textContent = 'Parámetros – ' + tipo;
 
   let fields = [];
@@ -403,52 +185,58 @@ function renderParams() {
 
   if (tipo === 'flexible') {
     fields = [
-      { k: 'W18', label: 'W18 — Ejes equivalentes (ESAL)', val: pf.W18, cb: v => pf.W18 = v, hidden: !mostrarW18 },
-      { k: 'R', label: 'R — Confiabilidad (%)', val: pf.R, cb: v => pf.R = v },
-      { k: 'So', label: 'So — Desviación estándar combinada', val: pf.So, cb: v => pf.So = v },
-      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad', val: pf.deltaPSI, cb: v => pf.deltaPSI = v },
-      { k: 'Mr', label: 'Mr — Módulo resiliente subrasante (MPa)', val: pf.Mr, cb: v => pf.Mr = v },
-      { k: 'a1', label: 'a₁ — Coef. capa 1 (AC)', val: pf.capas[0].a, cb: v => pf.capas[0].a = v },
-      { k: 'a2', label: 'a₂ — Coef. capa 2 (base)', val: pf.capas[1].a, cb: v => pf.capas[1].a = v },
-      { k: 'a3', label: 'a₃ — Coef. capa 3 (subbase)', val: pf.capas[2].a, cb: v => pf.capas[2].a = v },
-      { k: 'm1', label: 'm₁ — Coef. drenaje capa 1', val: pf.capas[0].m, cb: v => pf.capas[0].m = v },
-      { k: 'm2', label: 'm₂ — Coef. drenaje capa 2', val: pf.capas[1].m, cb: v => pf.capas[1].m = v },
-      { k: 'm3', label: 'm₃ — Coef. drenaje capa 3', val: pf.capas[2].m, cb: v => pf.capas[2].m = v },
+      { k: 'W18',  label: 'W18 — Ejes equivalentes (ESAL)',           val: pf.W18,        cb: v => pf.W18 = v,       hidden: !mostrarW18 },
+      { k: 'R',    label: 'R — Confiabilidad (%)',                    val: pf.R,          cb: v => pf.R = v },
+      { k: 'So',   label: 'So — Desviación estándar combinada',       val: pf.So,         cb: v => pf.So = v },
+      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad',        val: pf.deltaPSI,   cb: v => pf.deltaPSI = v },
+      { k: 'Mr',   label: 'Mr — Módulo resiliente subrasante (MPa)',  val: pf.Mr,         cb: v => pf.Mr = v },
+      { k: 'a1',   label: 'a₁ — Coef. capa 1 (AC)',                   val: pf.capas[0].a, cb: v => pf.capas[0].a = v },
+      { k: 'a2',   label: 'a₂ — Coef. capa 2 (base)',                 val: pf.capas[1].a, cb: v => pf.capas[1].a = v },
+      { k: 'a3',   label: 'a₃ — Coef. capa 3 (subbase)',              val: pf.capas[2].a, cb: v => pf.capas[2].a = v },
+      { k: 'm1',   label: 'm₁ — Coef. drenaje capa 1',                val: pf.capas[0].m, cb: v => pf.capas[0].m = v },
+      { k: 'm2',   label: 'm₂ — Coef. drenaje capa 2',                val: pf.capas[1].m, cb: v => pf.capas[1].m = v },
+      { k: 'm3',   label: 'm₃ — Coef. drenaje capa 3',                val: pf.capas[2].m, cb: v => pf.capas[2].m = v },
     ];
-    fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Flexible</h4>
+    if (fbox) fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Flexible</h4>
 <p>log(W18) = ZR·So + 9.36·log(SN+1) − 0.20 + log(ΔPSI/2.7) / [0.40 + 1094/(SN+1)⁵·¹⁹] + 2.32·log(Mr) − 8.07</p>`;
   } else {
     fields = [
-      { k: 'W18', label: 'W18 — Ejes equivalentes (ESAL)', val: pr.W18, cb: v => pr.W18 = v, hidden: !mostrarW18 },
-      { k: 'R', label: 'R — Confiabilidad (%)', val: pr.R, cb: v => pr.R = v },
-      { k: 'So', label: 'So — Desviación estándar combinada', val: pr.So, cb: v => pr.So = v },
-      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad', val: pr.deltaPSI, cb: v => pr.deltaPSI = v },
-      { k: 'Ec', label: 'Ec — Módulo elástico concreto (MPa)', val: pr.Ec, cb: v => pr.Ec = v },
-      { k: 'Sc', label: 'Sc — Módulo de rotura (MPa)', val: pr.Sc, cb: v => pr.Sc = v },
-      { k: 'k', label: 'k — Reacción de subrasante (MN/m³)', val: pr.k, cb: v => pr.k = v },
-      { k: 'J', label: 'J — Coef. transferencia de carga', val: pr.J, cb: v => pr.J = v },
-      { k: 'Cd', label: 'Cd — Coef. drenaje', val: pr.Cd, cb: v => pr.Cd = v },
+      { k: 'W18',  label: 'W18 — Ejes equivalentes (ESAL)',           val: pr.W18,        cb: v => pr.W18 = v,       hidden: !mostrarW18 },
+      { k: 'R',    label: 'R — Confiabilidad (%)',                    val: pr.R,          cb: v => pr.R = v },
+      { k: 'So',   label: 'So — Desviación estándar combinada',       val: pr.So,         cb: v => pr.So = v },
+      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad',        val: pr.deltaPSI,   cb: v => pr.deltaPSI = v },
+      { k: 'Ec',   label: 'Ec — Módulo elástico concreto (MPa)',      val: pr.Ec,         cb: v => pr.Ec = v },
+      { k: 'Sc',   label: 'Sc — Módulo de rotura (MPa)',              val: pr.Sc,         cb: v => pr.Sc = v },
+      { k: 'k',    label: 'k — Reacción de subrasante (MN/m³)',       val: pr.k,          cb: v => pr.k = v },
+      { k: 'J',    label: 'J — Coef. transferencia de carga',         val: pr.J,          cb: v => pr.J = v },
+      { k: 'Cd',   label: 'Cd — Coef. drenaje',                       val: pr.Cd,         cb: v => pr.Cd = v },
     ];
-    fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Rígido</h4>
+    if (fbox) fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Rígido</h4>
 <p>log(W18) = ZR·So + 7.35·log(D+1) − 0.06 + log(ΔPSI/3.0) / [1 + 1.624×10⁷/(D+1)⁸·⁴⁶] + (4.22 − 0.32·pt)·log[ Sc·Cd·(D⁰·⁷⁵−1.132) / (215.63·J·(D⁰·⁷⁵ − 18.42/(Ec/k)⁰·²⁵)) ]</p>`;
   }
 
   grid.innerHTML = '';
   fields.forEach(f => {
+    const d = document.createElement('div');
+    d.className = 'param-row';
+
     if (f.hidden) {
-      const d = document.createElement('div');
-      d.className = 'param-row';
       d.style.display = 'none';
       d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
       grid.appendChild(d);
-      d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
+      d.querySelector('input').addEventListener('change', e => {
+        const v = parseFloat(e.target.value);
+        if (!isNaN(v)) f.cb(v);
+      });
       return;
     }
-    const d = document.createElement('div');
-    d.className = 'param-row';
+
     d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
     grid.appendChild(d);
-    d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
+    d.querySelector('input').addEventListener('change', e => {
+      const v = parseFloat(e.target.value);
+      if (!isNaN(v)) f.cb(v);
+    });
   });
 
   renderTransitoParams();
@@ -460,13 +248,13 @@ function renderTransitoParams() {
   if (!grid) return;
 
   const fields = [
-    { k: 'TPD', label: 'TPD — Tránsito promedio diario (veh/día)', val: transito.TPD, cb: v => transito.TPD = v },
-    { k: 'factorCamion', label: '% de vehículos comerciales', val: transito.factorCamion * 100, cb: v => transito.factorCamion = v / 100 },
-    { k: 'factorCrec', label: 'Tasa de crecimiento anual (%)', val: transito.factorCrec * 100, cb: v => transito.factorCrec = v / 100 },
-    { k: 'anios', label: 'Período de diseño (años)', val: transito.anios, cb: v => transito.anios = v },
-    { k: 'factorDireccional', label: 'Factor de distribución direccional', val: transito.factorDireccional, cb: v => transito.factorDireccional = v },
-    { k: 'factorEjes', label: 'Factor de ejes equivalentes promedio', val: transito.factorEjes, cb: v => transito.factorEjes = v },
-    { k: 'carril', label: 'Factor de distribución por carril', val: transito.carril, cb: v => transito.carril = v }
+    { k: 'TPD',               label: 'TPD — Tránsito promedio diario (veh/día)', val: transito.TPD,               cb: v => transito.TPD = v },
+    { k: 'factorCamion',      label: '% de vehículos comerciales',              val: transito.factorCamion * 100, cb: v => transito.factorCamion = v / 100 },
+    { k: 'factorCrec',        label: 'Tasa de crecimiento anual (%)',           val: transito.factorCrec * 100,   cb: v => transito.factorCrec = v / 100 },
+    { k: 'anios',             label: 'Período de diseño (años)',                val: transito.anios,              cb: v => transito.anios = v },
+    { k: 'factorDireccional', label: 'Factor de distribución direccional',      val: transito.factorDireccional,  cb: v => transito.factorDireccional = v },
+    { k: 'factorEjes',        label: 'Factor de ejes equivalentes promedio',    val: transito.factorEjes,         cb: v => transito.factorEjes = v },
+    { k: 'carril',            label: 'Factor de distribución por carril',       val: transito.carril,             cb: v => transito.carril = v }
   ];
 
   grid.innerHTML = '';
@@ -488,11 +276,11 @@ function renderVehiculosGrid() {
 
   const tipos = [
     { k: 'bus', label: 'Bus' },
-    { k: 'c2', label: 'C2' },
-    { k: 'c3', label: 'C3' },
-    { k: 'c4', label: 'C4' },
-    { k: 'c5', label: 'C5' },
-    { k: 'c6', label: 'C6' }
+    { k: 'c2',  label: 'C2' },
+    { k: 'c3',  label: 'C3' },
+    { k: 'c4',  label: 'C4' },
+    { k: 'c5',  label: 'C5' },
+    { k: 'c6',  label: 'C6' }
   ];
 
   grid.innerHTML = '';
@@ -500,9 +288,9 @@ function renderVehiculosGrid() {
     const d = document.createElement('div');
     d.className = 'param-row';
     d.innerHTML = `
-      <label>${t.label} — veh/día</label>
+      <label>${t.label} — vehículos/día</label>
       <input type="number" value="${vehiculos[t.k]}" step="1" min="0">
-      <label style="margin-top:4px;">EALF — factor equiv.</label>
+      <label style="margin-top:4px;">EALF — factor de equivalencia</label>
       <input type="number" value="${factoresEjes[t.k]}" step="0.01" min="0">
     `;
     grid.appendChild(d);
@@ -534,6 +322,10 @@ function actualizarTotalVehiculos() {
   if (el) el.textContent = `Total vehículos comerciales: ${total}`;
 }
 
+// ============================================================
+//  CONFIANZA ZR
+// ============================================================
+
 function getZR(R) {
   const map = { 50: 0, 75: -0.674, 80: -0.842, 85: -1.036, 90: -1.282, 91: -1.340, 92: -1.405, 93: -1.476, 94: -1.555, 95: -1.645, 96: -1.751, 97: -1.881, 98: -2.054, 99: -2.326, 99.9: -3.090 };
   const keys = Object.keys(map).map(Number).sort((a,b)=>a-b);
@@ -541,10 +333,17 @@ function getZR(R) {
   return -1.282;
 }
 
+// ============================================================
+//  CÁLCULO PRINCIPAL
+// ============================================================
+
 function calcular() {
   if (metodo === 'transito') {
     const esal = calcularESALdesdeTransito();
-    if (esal === null) { calculado = false; return; }
+    if (esal === null) {
+      calculado = false;
+      return;
+    }
     if (tipo === 'flexible') pf.W18 = esal;
     else pr.W18 = esal;
     setStatus('ESAL calculado desde tránsito: ' + esal.toExponential(2), 'info');
@@ -554,8 +353,10 @@ function calcular() {
   else calcularRigido();
 
   calculado = true;
+
   const rp = document.getElementById('results-panel');
   if (rp && rp.style.display === 'block') renderResults();
+
   setStatus('✅ Cálculo completado.', 'ok');
 }
 
@@ -611,6 +412,10 @@ function calcularRigido() {
   pr.D_losa = Math.max(100, Math.ceil(D * 25.4 / 5) * 5);
   pr.D_base = 150;
 }
+
+// ============================================================
+//  SUGERENCIA TÉCNICA
+// ============================================================
 
 function obtenerSugerencia() {
   let sugerencia = "";
@@ -751,10 +556,16 @@ function obtenerSugerencia() {
   return { sugerencia, color, detalleNorma, especificacion, tituloEspecificacion };
 }
 
+// ============================================================
+//  RENDER DE RESULTADOS
+// ============================================================
+
 function renderResults() {
   const grid = document.getElementById('res-grid');
   const tbl = document.getElementById('capas-table');
   const sugDiv = document.getElementById('sugerencia-resultado');
+  if (!grid || !tbl || !sugDiv) return;
+
   document.getElementById('res-title').textContent = 'Resultados — ' + tipo + (metodo === 'transito' ? ' (desde tránsito)' : '');
 
   const { sugerencia, color, detalleNorma, especificacion, tituloEspecificacion } = obtenerSugerencia();
@@ -801,6 +612,10 @@ function renderResults() {
   sugDiv.style.background = color + '12';
   sugDiv.style.borderLeft = `4px solid ${color}`;
 }
+
+// ============================================================
+//  INFORME TÉCNICO
+// ============================================================
 
 function generarInforme() {
   if (!calculado) {
@@ -895,8 +710,8 @@ function generarInforme() {
   }
 
   if (metodo === 'transito') {
-    const totalComerciales = Object.values(vehiculos).reduce((a,b) => a + b, 0);
     const r = resumenTransito || {};
+    const totalComerciales = Object.values(vehiculos).reduce((a,b) => a + b, 0);
     metodoTransitoHTML = `
       <h2>4. Metodología de Tránsito</h2>
       <p>El W18 fue calculado a partir del conteo vehicular y los parámetros de tránsito:</p>
@@ -1044,7 +859,7 @@ ${contenidoCapas}
 </div>
 
 <div class="footer">
-  Informe generado automáticamente por el Sistema de Diseño de Pavimentos AASHTO-93 v5.0<br>
+  Informe generado automáticamente por el Sistema de Diseño de Pavimentos AASHTO-93<br>
   Fundación Universitaria Tecnológica Comfenalco · Solo uso académico/referencial
 </div>
 
@@ -1058,6 +873,10 @@ ${contenidoCapas}
 
   setStatus('✅ Informe técnico generado. Se abrió en nueva pestaña.', 'ok');
 }
+
+// ============================================================
+//  EJEMPLOS
+// ============================================================
 
 function ejemploFlex() {
   setTipo('flexible');
@@ -1096,7 +915,7 @@ function ejemploRig() {
 }
 
 // ============================================================
-//  DIBUJO DE ESCENA
+//  DIBUJO EN CANVAS
 // ============================================================
 
 function drawCloud(cx, cy, s, off) {
@@ -1486,6 +1305,3 @@ function loop() {
 
 loop();
 setMetodo('esal');
-</script>
-</body>
-</html>
