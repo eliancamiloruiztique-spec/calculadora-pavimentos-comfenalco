@@ -127,7 +127,7 @@ function calcularESALdesdeTransito() {
     if (typeof setStatus === "function") {
       setStatus("El TPD debe ser mayor que cero.");
     }
-    return null;
+    retur null;
   }
 
   if (factorCamion < 0 || factorCamion > 1) {
