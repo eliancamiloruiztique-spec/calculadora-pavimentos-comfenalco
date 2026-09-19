@@ -199,6 +199,8 @@ function calcularESALdesdeTransito() {
 function renderParams() {
   const grid = document.getElementById('params-grid');
   const fbox = document.getElementById('formula-box');
+  if (!grid) return;
+
   document.getElementById('params-title').textContent = 'Parámetros – ' + tipo;
 
   let fields = [];
@@ -206,58 +208,60 @@ function renderParams() {
 
   if (tipo === 'flexible') {
     fields = [
-      { k: 'W18', label: 'W18 — Ejes equivalentes (ESAL)', val: pf.W18, cb: v => pf.W18 = v, hidden: !mostrarW18 },
-      { k: 'R', label: 'R — Confiabilidad (%)', val: pf.R, cb: v => pf.R = v },
-      { k: 'So', label: 'So — Desviación estándar combinada', val: pf.So, cb: v => pf.So = v },
-      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad', val: pf.deltaPSI, cb: v => pf.deltaPSI = v },
-      { k: 'Mr', label: 'Mr — Módulo resiliente subrasante (MPa)', val: pf.Mr, cb: v => pf.Mr = v },
-      { k: 'a1', label: 'a₁ — Coef. capa 1 (AC)', val: pf.capas[0].a, cb: v => pf.capas[0].a = v },
-      { k: 'a2', label: 'a₂ — Coef. capa 2 (base)', val: pf.capas[1].a, cb: v => pf.capas[1].a = v },
-      { k: 'a3', label: 'a₃ — Coef. capa 3 (subbase)', val: pf.capas[2].a, cb: v => pf.capas[2].a = v },
-      { k: 'm1', label: 'm₁ — Coef. drenaje capa 1', val: pf.capas[0].m, cb: v => pf.capas[0].m = v },
-      { k: 'm2', label: 'm₂ — Coef. drenaje capa 2', val: pf.capas[1].m, cb: v => pf.capas[1].m = v },
-      { k: 'm3', label: 'm₃ — Coef. drenaje capa 3', val: pf.capas[2].m, cb: v => pf.capas[2].m = v },
+      { k: 'W18',  label: 'W18 — Ejes equivalentes (ESAL)',        val: pf.W18,       cb: v => pf.W18 = v,       hidden: !mostrarW18 },
+      { k: 'R',    label: 'R — Confiabilidad (%)',                 val: pf.R,         cb: v => pf.R = v },
+      { k: 'So',   label: 'So — Desviación estándar combinada',    val: pf.So,        cb: v => pf.So = v },
+      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad',     val: pf.deltaPSI,  cb: v => pf.deltaPSI = v },
+      { k: 'Mr',   label: 'Mr — Módulo resiliente subrasante (MPa)', val: pf.Mr,      cb: v => pf.Mr = v },
+      { k: 'a1',   label: 'a₁ — Coef. capa 1 (AC)',                val: pf.capas[0].a, cb: v => pf.capas[0].a = v },
+      { k: 'a2',   label: 'a₂ — Coef. capa 2 (base)',              val: pf.capas[1].a, cb: v => pf.capas[1].a = v },
+      { k: 'a3',   label: 'a₃ — Coef. capa 3 (subbase)',           val: pf.capas[2].a, cb: v => pf.capas[2].a = v },
+      { k: 'm1',   label: 'm₁ — Coef. drenaje capa 1',             val: pf.capas[0].m, cb: v => pf.capas[0].m = v },
+      { k: 'm2',   label: 'm₂ — Coef. drenaje capa 2',             val: pf.capas[1].m, cb: v => pf.capas[1].m = v },
+      { k: 'm3',   label: 'm₃ — Coef. drenaje capa 3',             val: pf.capas[2].m, cb: v => pf.capas[2].m = v },
     ];
-    fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Flexible</h4>
+    if (fbox) fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Flexible</h4>
 <p>log(W18) = ZR·So + 9.36·log(SN+1) − 0.20 + log(ΔPSI/2.7) / [0.40 + 1094/(SN+1)⁵·¹⁹] + 2.32·log(Mr) − 8.07</p>`;
   } else {
     fields = [
-      { k: 'W18', label: 'W18 — Ejes equivalentes (ESAL)', val: pr.W18, cb: v => pr.W18 = v, hidden: !mostrarW18 },
-      { k: 'R', label: 'R — Confiabilidad (%)', val: pr.R, cb: v => pr.R = v },
-      { k: 'So', label: 'So — Desviación estándar combinada', val: pr.So, cb: v => pr.So = v },
-      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad', val: pr.deltaPSI, cb: v => pr.deltaPSI = v },
-      { k: 'Ec', label: 'Ec — Módulo elástico concreto (MPa)', val: pr.Ec, cb: v => pr.Ec = v },
-      { k: 'Sc', label: 'Sc — Módulo de rotura (MPa)', val: pr.Sc, cb: v => pr.Sc = v },
-      { k: 'k', label: 'k — Reacción de subrasante (MN/m³)', val: pr.k, cb: v => pr.k = v },
-      { k: 'J', label: 'J — Coef. transferencia de carga', val: pr.J, cb: v => pr.J = v },
-      { k: 'Cd', label: 'Cd — Coef. drenaje', val: pr.Cd, cb: v => pr.Cd = v },
+      { k: 'W18',  label: 'W18 — Ejes equivalentes (ESAL)',       val: pr.W18,       cb: v => pr.W18 = v,       hidden: !mostrarW18 },
+      { k: 'R',    label: 'R — Confiabilidad (%)',                val: pr.R,         cb: v => pr.R = v },
+      { k: 'So',   label: 'So — Desviación estándar combinada',   val: pr.So,        cb: v => pr.So = v },
+      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad',    val: pr.deltaPSI,  cb: v => pr.deltaPSI = v },
+      { k: 'Ec',   label: 'Ec — Módulo elástico concreto (MPa)',  val: pr.Ec,        cb: v => pr.Ec = v },
+      { k: 'Sc',   label: 'Sc — Módulo de rotura (MPa)',          val: pr.Sc,        cb: v => pr.Sc = v },
+      { k: 'k',    label: 'k — Reacción de subrasante (MN/m³)',   val: pr.k,         cb: v => pr.k = v },
+      { k: 'J',    label: 'J — Coef. transferencia de carga',     val: pr.J,         cb: v => pr.J = v },
+      { k: 'Cd',   label: 'Cd — Coef. drenaje',                   val: pr.Cd,        cb: v => pr.Cd = v },
     ];
-    fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Rígido</h4>
+    if (fbox) fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Rígido</h4>
 <p>log(W18) = ZR·So + 7.35·log(D+1) − 0.06 + log(ΔPSI/3.0) / [1 + 1.624×10⁷/(D+1)⁸·⁴⁶] + (4.22 − 0.32·pt)·log[ Sc·Cd·(D⁰·⁷⁵−1.132) / (215.63·J·(D⁰·⁷⁵ − 18.42/(Ec/k)⁰·²⁵)) ]</p>`;
   }
 
   grid.innerHTML = '';
   fields.forEach(f => {
+    const d = document.createElement('div');
+    d.className = 'param-row';
+
     if (f.hidden) {
-      const d = document.createElement('div');
-      d.className = 'param-row';
       d.style.display = 'none';
       d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
       grid.appendChild(d);
-      d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
+      d.querySelector('input').addEventListener('change', e => {
+        const v = parseFloat(e.target.value);
+        if (!isNaN(v)) f.cb(v);
+      });
       return;
     }
-    const d = document.createElement('div');
-    d.className = 'param-row';
+
     d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
     grid.appendChild(d);
-    d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
+    d.querySelector('input').addEventListener('change', e => {
+      const v = parseFloat(e.target.value);
+      if (!isNaN(v)) f.cb(v);
+    });
   });
-
-  renderTransitoParams();
-  renderVehiculosGrid();
 }
-
 function renderTransitoParams() {
   const grid = document.getElementById('transito-grid');
 
@@ -335,9 +339,7 @@ function renderTransitoParams() {
   });
 }
 function renderVehiculosGrid() {
-
   const grid = document.getElementById('vehiculos-grid');
-
   if (!grid) return;
 
   const tipos = [
@@ -352,64 +354,35 @@ function renderVehiculosGrid() {
   grid.innerHTML = '';
 
   tipos.forEach(t => {
-
     const d = document.createElement('div');
-
     d.className = 'param-row';
-
     d.innerHTML = `
-      <label>${t.label} — vehiculos/dia</label>
-
-      <input
-        type="number"
-        value="${vehiculos[t.k]}"
-        step="1"
-        min="0"
-      >
-
-      <label style="margin-top:4px;">
-        EALF — factor de equivalencia
-      </label>
-
-      <input
-        type="number"
-        value="${factoresEjes[t.k]}"
-        step="0.01"
-        min="0"
-      >
+      <label>${t.label} — vehículos/día</label>
+      <input type="number" value="${vehiculos[t.k]}" step="1" min="0">
+      <label style="margin-top:4px;">EALF — factor de equivalencia</label>
+      <input type="number" value="${factoresEjes[t.k]}" step="0.01" min="0">
     `;
-
     grid.appendChild(d);
 
     const inputs = d.querySelectorAll('input');
 
-    // Vehiculos por dia
     inputs[0].addEventListener('change', e => {
-
       const v = parseFloat(e.target.value);
-
       if (Number.isFinite(v) && v >= 0) {
         vehiculos[t.k] = v;
         actualizarTotalVehiculos();
       }
-
     });
 
-    // Factor EALF
     inputs[1].addEventListener('change', e => {
-
       const v = parseFloat(e.target.value);
-
       if (Number.isFinite(v) && v >= 0) {
         factoresEjes[t.k] = v;
       }
-
     });
-
   });
 
   actualizarTotalVehiculos();
-
 }
 function actualizarTotalVehiculos() {
   const total = Object.values(vehiculos).reduce((a,b) => a + b, 0);
@@ -424,9 +397,7 @@ function getZR(R) {
 }
 
 function calcular() {
-
   if (metodo === 'transito') {
-
     const esal = calcularESALdesdeTransito();
 
     if (esal === null) {
@@ -440,27 +411,18 @@ function calcular() {
       pr.W18 = esal;
     }
 
-    setStatus(
-      'ESAL calculado desde transito: ' + esal.toLocaleString('es-CO'),
-      'info'
-    );
+    setStatus('ESAL calculado desde tránsito: ' + esal.toExponential(2), 'info');
   }
 
-  if (tipo === 'flexible') {
-    calcularFlexible();
-  } else {
-    calcularRigido();
-  }
+  if (tipo === 'flexible') calcularFlexible();
+  else calcularRigido();
 
   calculado = true;
 
   const rp = document.getElementById('results-panel');
+  if (rp && rp.style.display === 'block') renderResults();
 
-  if (rp && rp.style.display === 'block') {
-    renderResults();
-  }
-
-  setStatus('Calculo completado.', 'ok');
+  setStatus('✅ Cálculo completado.', 'ok');
 }
 
 function calcularFlexible() {
