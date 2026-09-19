@@ -173,15 +173,27 @@ function calcularESALdesdeTransito() {
 
   // W18 acumulado de diseño
   const W18 =
-    vehiculosComercialesDia *
-    365 *
-    factorCrecimiento *
-    factorDireccional *
-    factorCarril *
-    factorEjes;
+  vehiculosComercialesDia *
+  365 *
+  factorCrecimiento *
+  factorDireccional *
+  factorCarril *
+  factorEjes;
 
-  return Math.round(W18);
-}
+resumenTransito = {
+  TPD: TPD,
+  porcentajeComercial: factorCamion,
+  vehiculosComercialesDia: vehiculosComercialesDia,
+  tasaCrecimiento: factorCrec,
+  anios: anios,
+  factorCrecimiento: factorCrecimiento,
+  factorDireccional: factorDireccional,
+  factorCarril: factorCarril,
+  factorEjes: factorEjes,
+  W18: Math.round(W18)
+};
+
+return Math.round(W18);
 
 function renderParams() {
   const grid = document.getElementById('params-grid');
