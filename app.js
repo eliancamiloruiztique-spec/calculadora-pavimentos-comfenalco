@@ -28,8 +28,35 @@ let pr = {
   D_losa: 250, D_base: 150
 };
 
-let transito = { TPD: 5000, factorCamion: 0.15, factorCrec: 0.03, anios: 20, factorEjes: 0.8, carril: 0.5 };
-let vehiculos = { bus: 200, c2: 150, c3: 100, c4: 80, c5: 60, c6: 40 };
+let transito = {
+  TPD: 5000,
+  factorCamion: 0.15,
+  factorCrec: 0.03,
+  anios: 20,
+  factorEjes: 0.8,
+  factorDireccional: 0.50,
+  carril: 0.50
+};
+
+let vehiculos = {
+  bus: 200,
+  c2: 150,
+  c3: 100,
+  c4: 80,
+  c5: 60,
+  c6: 40
+};
+
+let factoresEjes = {
+  bus: 0.80,
+  c2: 0.80,
+  c3: 0.80,
+  c4: 0.80,
+  c5: 0.80,
+  c6: 0.80
+};
+
+let resumenTransito = null;
 
 function setStatus(msg, cls) {
   const el = document.getElementById('status-txt');
@@ -73,91 +100,189 @@ function entrarApp() {
 }
 
 function calcularESALdesdeTransito() {
-  const t = transito.factorCrec;
-  const n = transito.anios;
-  const factorCrec = t > 0 ? ((Math.pow(1 + t, n) - 1) / t) : n;
-  const totalComerciales = Object.values(vehiculos).reduce((a,b) => a + b, 0);
-  return Math.round(totalComerciales * 365 * transito.factorCamion * transito.factorEjes * transito.carril * factorCrec);
-}
+  const TPD = Number(transito.TPD);
+  const factorCamion = Number(transito.factorCamion);
+  const factorCrec = Number(transito.factorCrec);
+  const anios = Number(transito.anios);
+  const factorEjes = Number(transito.factorEjes);
+  const factorDireccional = Number(transito.factorDireccional);
+  const factorCarril = Number(transito.carril);
 
-function renderParams() {
-  const grid = document.getElementById('params-grid');
-  const fbox = document.getElementById('formula-box');
-  document.getElementById('params-title').textContent = 'Parámetros – ' + tipo;
-
-  let fields = [];
-  const mostrarW18 = (metodo === 'esal');
-
-  if (tipo === 'flexible') {
-    fields = [
-      { k: 'W18', label: 'W18 — Ejes equivalentes (ESAL)', val: pf.W18, cb: v => pf.W18 = v, hidden: !mostrarW18 },
-      { k: 'R', label: 'R — Confiabilidad (%)', val: pf.R, cb: v => pf.R = v },
-      { k: 'So', label: 'So — Desviación estándar combinada', val: pf.So, cb: v => pf.So = v },
-      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad', val: pf.deltaPSI, cb: v => pf.deltaPSI = v },
-      { k: 'Mr', label: 'Mr — Módulo resiliente subrasante (MPa)', val: pf.Mr, cb: v => pf.Mr = v },
-      { k: 'a1', label: 'a₁ — Coef. capa 1 (AC)', val: pf.capas[0].a, cb: v => pf.capas[0].a = v },
-      { k: 'a2', label: 'a₂ — Coef. capa 2 (base)', val: pf.capas[1].a, cb: v => pf.capas[1].a = v },
-      { k: 'a3', label: 'a₃ — Coef. capa 3 (subbase)', val: pf.capas[2].a, cb: v => pf.capas[2].a = v },
-      { k: 'm1', label: 'm₁ — Coef. drenaje capa 1', val: pf.capas[0].m, cb: v => pf.capas[0].m = v },
-      { k: 'm2', label: 'm₂ — Coef. drenaje capa 2', val: pf.capas[1].m, cb: v => pf.capas[1].m = v },
-      { k: 'm3', label: 'm₃ — Coef. drenaje capa 3', val: pf.capas[2].m, cb: v => pf.capas[2].m = v },
-    ];
-    fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Flexible</h4>
-<p>log(W18) = ZR·So + 9.36·log(SN+1) − 0.20 + log(ΔPSI/2.7) / [0.40 + 1094/(SN+1)⁵·¹⁹] + 2.32·log(Mr) − 8.07</p>`;
-  } else {
-    fields = [
-      { k: 'W18', label: 'W18 — Ejes equivalentes (ESAL)', val: pr.W18, cb: v => pr.W18 = v, hidden: !mostrarW18 },
-      { k: 'R', label: 'R — Confiabilidad (%)', val: pr.R, cb: v => pr.R = v },
-      { k: 'So', label: 'So — Desviación estándar combinada', val: pr.So, cb: v => pr.So = v },
-      { k: 'dPSI', label: 'ΔPSI — Pérdida de serviciabilidad', val: pr.deltaPSI, cb: v => pr.deltaPSI = v },
-      { k: 'Ec', label: 'Ec — Módulo elástico concreto (MPa)', val: pr.Ec, cb: v => pr.Ec = v },
-      { k: 'Sc', label: 'Sc — Módulo de rotura (MPa)', val: pr.Sc, cb: v => pr.Sc = v },
-      { k: 'k', label: 'k — Reacción de subrasante (MN/m³)', val: pr.k, cb: v => pr.k = v },
-      { k: 'J', label: 'J — Coef. transferencia de carga', val: pr.J, cb: v => pr.J = v },
-      { k: 'Cd', label: 'Cd — Coef. drenaje', val: pr.Cd, cb: v => pr.Cd = v },
-    ];
-    fbox.innerHTML = `<h4>Ecuación AASHTO-93 — Pavimento Rígido</h4>
-<p>log(W18) = ZR·So + 7.35·log(D+1) − 0.06 + log(ΔPSI/3.0) / [1 + 1.624×10⁷/(D+1)⁸·⁴⁶] + (4.22 − 0.32·pt)·log[ Sc·Cd·(D⁰·⁷⁵−1.132) / (215.63·J·(D⁰·⁷⁵ − 18.42/(Ec/k)⁰·²⁵)) ]</p>`;
+  if (
+    !Number.isFinite(TPD) ||
+    !Number.isFinite(factorCamion) ||
+    !Number.isFinite(factorCrec) ||
+    !Number.isFinite(anios) ||
+    !Number.isFinite(factorEjes) ||
+    !Number.isFinite(factorDireccional) ||
+    !Number.isFinite(factorCarril)
+  ) {
+    if (typeof setStatus === "function") {
+      setStatus("Revise los datos de tránsito ingresados.");
+    }
+    return null;
   }
 
-  grid.innerHTML = '';
-  fields.forEach(f => {
-    if (f.hidden) {
-      const d = document.createElement('div');
-      d.className = 'param-row';
-      d.style.display = 'none';
-      d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
-      grid.appendChild(d);
-      d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
-      return;
+  if (TPD <= 0) {
+    if (typeof setStatus === "function") {
+      setStatus("El TPD debe ser mayor que cero.");
     }
-    const d = document.createElement('div');
-    d.className = 'param-row';
-    d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
-    grid.appendChild(d);
-    d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
-  });
+    return null;
+  }
 
-  renderTransitoParams();
-  renderVehiculosGrid();
+  if (factorCamion < 0 || factorCamion > 1) {
+    if (typeof setStatus === "function") {
+      setStatus("El porcentaje de vehículos comerciales debe estar entre 0 % y 100 %.");
+    }
+    return null;
+  }
+
+  if (factorCrec < -1) {
+    if (typeof setStatus === "function") {
+      setStatus("La tasa de crecimiento no puede ser menor que -100 %.");
+    }
+    return null;
+  }
+
+  if (anios <= 0) {
+    if (typeof setStatus === "function") {
+      setStatus("El período de diseño debe ser mayor que cero.");
+    }
+    return null;
+  }
+
+  if (factorEjes <= 0) {
+    if (typeof setStatus === "function") {
+      setStatus("El factor de ejes equivalentes debe ser mayor que cero.");
+    }
+    return null;
+  }
+
+  if (factorDireccional <= 0 || factorDireccional > 1) {
+    if (typeof setStatus === "function") {
+      setStatus("El factor direccional debe estar entre 0 y 1.");
+    }
+    return null;
+  }
+
+  if (factorCarril <= 0 || factorCarril > 1) {
+    if (typeof setStatus === "function") {
+      setStatus("El factor de distribución por carril debe estar entre 0 y 1.");
+    }
+    return null;
+  }
+
+  let factorCrecimiento;
+
+  if (factorCrec > 0) {
+    factorCrecimiento =
+      (Math.pow(1 + factorCrec, anios) - 1) / factorCrec;
+  } else {
+    factorCrecimiento = anios;
+  }
+
+  const vehiculosComercialesDia = TPD * factorCamion;
+
+  const W18 =
+    vehiculosComercialesDia *
+    365 *
+    factorCrecimiento *
+    factorDireccional *
+    factorCarril *
+    factorEjes;
+
+  resumenTransito = {
+    TPD: TPD,
+    porcentajeComercial: factorCamion,
+    vehiculosComercialesDia: vehiculosComercialesDia,
+    tasaCrecimiento: factorCrec,
+    anios: anios,
+    factorCrecimiento: factorCrecimiento,
+    factorDireccional: factorDireccional,
+    factorCarril: factorCarril,
+    factorEjes: factorEjes,
+    W18: W18
+  };
+
+  return Math.round(W18);
 }
-
 function renderTransitoParams() {
-  const grid = document.getElementById('transito-grid');
-  const fields = [
-    { k: 'factorCamion', label: '% de camiones (ponderado)', val: transito.factorCamion * 100, cb: v => transito.factorCamion = v / 100 },
-    { k: 'factorCrec', label: 'Tasa crecimiento anual (%)', val: transito.factorCrec * 100, cb: v => transito.factorCrec = v / 100 },
-    { k: 'anios', label: 'Período de diseño (años)', val: transito.anios, cb: v => transito.anios = v },
-    { k: 'factorEjes', label: 'Factor de ejes equivalentes', val: transito.factorEjes, cb: v => transito.factorEjes = v },
-    { k: 'carril', label: 'Factor distribución por carril', val: transito.carril, cb: v => transito.carril = v },
+  const grid = document.getElementById("transito-grid");
+
+  if (!grid) return;
+
+  const campos = [
+    {
+      key: "TPD",
+      label: "TPD — Tránsito promedio diario (veh/día)",
+      value: transito.TPD,
+      step: "1"
+    },
+    {
+      key: "factorCamion",
+      label: "% de vehículos comerciales",
+      value: transito.factorCamion * 100,
+      step: "0.1"
+    },
+    {
+      key: "factorCrec",
+      label: "Tasa de crecimiento anual (%)",
+      value: transito.factorCrec * 100,
+      step: "0.1"
+    },
+    {
+      key: "anios",
+      label: "Período de diseño (años)",
+      value: transito.anios,
+      step: "1"
+    },
+    {
+      key: "factorDireccional",
+      label: "Factor de distribución direccional",
+      value: transito.factorDireccional,
+      step: "0.01"
+    },
+    {
+      key: "factorEjes",
+      label: "Factor de ejes equivalentes promedio",
+      value: transito.factorEjes,
+      step: "0.01"
+    },
+    {
+      key: "carril",
+      label: "Factor de distribución por carril",
+      value: transito.carril,
+      step: "0.01"
+    }
   ];
-  grid.innerHTML = '';
-  fields.forEach(f => {
-    const d = document.createElement('div');
-    d.className = 'param-row';
-    d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
-    grid.appendChild(d);
-    d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
+
+  grid.innerHTML = "";
+
+  campos.forEach(campo => {
+    const fila = document.createElement("div");
+    fila.className = "param-row";
+
+    const label = document.createElement("label");
+    label.textContent = campo.label;
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.step = campo.step;
+    input.value = campo.value;
+
+    input.addEventListener("input", () => {
+      let valor = Number(input.value);
+
+      if (campo.key === "factorCamion" || campo.key === "factorCrec") {
+        valor = valor / 100;
+      }
+
+      transito[campo.key] = valor;
+    });
+
+    fila.appendChild(label);
+    fila.appendChild(input);
+    grid.appendChild(fila);
   });
 }
 
@@ -188,10 +313,16 @@ function getZR(R) {
 }
 
 function calcular() {
-  if (metodo === 'transito') {
-    const esal = calcularESALdesdeTransito();
-    if (tipo === 'flexible') pf.W18 = esal;
-    else pr.W18 = esal;
+ if (metodo === "transito") {
+  const esal = calcularESALdesdeTransito();
+
+  if (esal === null) {
+    return;
+  }
+
+  pf.W18 = esal;
+  pr.W18 = esal;
+}
     setStatus('ESAL calculado desde tránsito: ' + esal.toExponential(2), 'info');
   }
   if (tipo === 'flexible') calcularFlexible();
