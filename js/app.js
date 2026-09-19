@@ -197,8 +197,6 @@ function calcularESALdesdeTransito() {
 }
 
 function renderParams() {
-
-function renderParams() {
   const grid = document.getElementById('params-grid');
   const fbox = document.getElementById('formula-box');
   document.getElementById('params-title').textContent = 'Parámetros – ' + tipo;
