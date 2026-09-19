@@ -79,11 +79,88 @@ function entrarApp() {
 }
 
 function calcularESALdesdeTransito() {
-  const t = transito.factorCrec;
-  const n = transito.anios;
-  const factorCrec = t > 0 ? ((Math.pow(1 + t, n) - 1) / t) : n;
-  const totalComerciales = Object.values(vehiculos).reduce((a,b) => a + b, 0);
-  return Math.round(totalComerciales * 365 * transito.factorCamion * transito.factorEjes * transito.carril * factorCrec);
+
+  const TPD = Number(transito.TPD);
+  const factorCamion = Number(transito.factorCamion);
+  const factorCrec = Number(transito.factorCrec);
+  const anios = Number(transito.anios);
+  const factorEjes = Number(transito.factorEjes);
+  const factorDireccional = Number(transito.factorDireccional);
+  const factorCarril = Number(transito.carril);
+
+  // Validacion de datos
+  if (
+    !Number.isFinite(TPD) ||
+    !Number.isFinite(factorCamion) ||
+    !Number.isFinite(factorCrec) ||
+    !Number.isFinite(anios) ||
+    !Number.isFinite(factorEjes) ||
+    !Number.isFinite(factorDireccional) ||
+    !Number.isFinite(factorCarril)
+  ) {
+    setStatus('Revise los datos de transito ingresados.', 'err');
+    return null;
+  }
+
+  if (TPD <= 0) {
+    setStatus('El TPD debe ser mayor que cero.', 'err');
+    return null;
+  }
+
+  if (factorCamion < 0 || factorCamion > 1) {
+    setStatus('El porcentaje de vehiculos comerciales debe estar entre 0 y 100%.', 'err');
+    return null;
+  }
+
+  if (factorCrec <= -1) {
+    setStatus('La tasa de crecimiento no puede ser menor o igual a -100%.', 'err');
+    return null;
+  }
+
+  if (anios <= 0) {
+    setStatus('El periodo de diseño debe ser mayor que cero.', 'err');
+    return null;
+  }
+
+  if (factorEjes <= 0) {
+    setStatus('El factor de ejes equivalentes debe ser mayor que cero.', 'err');
+    return null;
+  }
+
+  if (factorDireccional <= 0 || factorDireccional > 1) {
+    setStatus('El factor de distribucion direccional debe estar entre 0 y 1.', 'err');
+    return null;
+  }
+
+  if (factorCarril <= 0 || factorCarril > 1) {
+    setStatus('El factor de distribucion por carril debe estar entre 0 y 1.', 'err');
+    return null;
+  }
+
+  // Factor de crecimiento acumulado
+  let factorCrecimiento;
+
+  if (factorCrec > 0) {
+    factorCrecimiento =
+      (Math.pow(1 + factorCrec, anios) - 1) / factorCrec;
+  } else {
+    factorCrecimiento = anios;
+  }
+
+  // Vehiculos comerciales diarios
+  const vehiculosComercialesDia =
+    TPD * factorCamion;
+
+  // W18 acumulado de diseño
+  const W18 =
+    vehiculosComercialesDia *
+    365 *
+    factorCrecimiento *
+    factorDireccional *
+    factorCarril *
+    factorEjes;
+
+  return Math.round(W18);
 }
 
 function renderParams() {
