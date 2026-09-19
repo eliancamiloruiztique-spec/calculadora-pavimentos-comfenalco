@@ -334,16 +334,79 @@ function renderTransitoParams() {
   });
 }
 function renderVehiculosGrid() {
+
   const grid = document.getElementById('vehiculos-grid');
-  const tipos = [{ k: 'bus', label: 'Bus' }, { k: 'c2', label: 'C2' }, { k: 'c3', label: 'C3' }, { k: 'c4', label: 'C4' }, { k: 'c5', label: 'C5' }, { k: 'c6', label: 'C6' }];
+
+  if (!grid) return;
+
+  const tipos = [
+    { k: 'bus', label: 'Bus' },
+    { k: 'c2', label: 'C2' },
+    { k: 'c3', label: 'C3' },
+    { k: 'c4', label: 'C4' },
+    { k: 'c5', label: 'C5' },
+    { k: 'c6', label: 'C6' }
+  ];
+
   grid.innerHTML = '';
+
   tipos.forEach(t => {
+
     const d = document.createElement('div');
+
     d.className = 'param-row';
-    d.innerHTML = `<label>${t.label}</label><input type="number" value="${vehiculos[t.k]}" step="1" min="0">`;
+
+    d.innerHTML = `
+      <label>${t.label} — vehículos/día</label>
+
+      <input
+        type="number"
+        value="${vehiculos[t.k]}"
+        step="1"
+        min="0"
+      >
+
+      <label style="margin-top:4px;">
+        EALF — factor de equivalencia
+      </label>
+
+      <input
+        type="number"
+        value="${factoresEjes[t.k]}"
+        step="0.01"
+        min="0"
+      >
+    `;
+
     grid.appendChild(d);
-    d.querySelector('input').addEventListener('change', e => { vehiculos[t.k] = parseInt(e.target.value) || 0; actualizarTotalVehiculos(); });
+
+    const inputs = d.querySelectorAll('input');
+
+    // Vehiculos por dia
+    inputs[0].addEventListener('change', e => {
+
+      const v = parseFloat(e.target.value);
+
+      if (Number.isFinite(v) && v >= 0) {
+        vehiculos[t.k] = v;
+        actualizarTotalVehiculos();
+      }
+
+    });
+
+    // Factor EALF
+    inputs[1].addEventListener('change', e => {
+
+      const v = parseFloat(e.target.value);
+
+      if (Number.isFinite(v) && v >= 0) {
+        factoresEjes[t.k] = v;
+      }
+
+    });
+
   });
+
   actualizarTotalVehiculos();
 }
 
