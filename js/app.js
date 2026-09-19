@@ -70,37 +70,51 @@ function setStatus(msg, cls) {
 function setTipo(t) {
   tipo = t;
   calculado = false;
-  document.getElementById('btn-flex').classList.toggle('active', t === 'flexible');
-  document.getElementById('btn-rig').classList.toggle('active', t === 'rigido');
-  document.getElementById('hdr-tipo').textContent = t.toUpperCase();
+  const bf = document.getElementById('btn-flex');
+  const br = document.getElementById('btn-rig');
+  if (bf) bf.classList.toggle('active', t === 'flexible');
+  if (br) br.classList.toggle('active', t === 'rigido');
+  const ht = document.getElementById('hdr-tipo');
+  if (ht) ht.textContent = t.toUpperCase();
   setStatus('Modo cambiado a: ' + t.toUpperCase(), 'info');
   const pp = document.getElementById('params-panel');
   if (pp && pp.style.display === 'block') renderParams();
   const rp = document.getElementById('results-panel');
   if (rp) rp.style.display = 'none';
+  actualizarWorkflow('informacion');
 }
 
 function setMetodo(m) {
   metodo = m;
-  document.getElementById('metodo-esal').classList.toggle('active', m === 'esal');
-  document.getElementById('metodo-transito').classList.toggle('active', m === 'transito');
-  document.getElementById('transito-params').style.display = (m === 'transito') ? 'block' : 'none';
+  const me = document.getElementById('metodo-esal');
+  const mt = document.getElementById('metodo-transito');
+  if (me) me.classList.toggle('active', m === 'esal');
+  if (mt) mt.classList.toggle('active', m === 'transito');
+  const tp = document.getElementById('transito-params');
+  if (tp) tp.style.display = (m === 'transito') ? 'block' : 'none';
   renderParams();
   setStatus('Método: ' + (m === 'esal' ? 'ESAL (W18)' : 'Tránsito → ESAL'), 'info');
+  actualizarWorkflow(m === 'esal' ? 'informacion' : 'transito');
 }
-
 function togglePanel(id) {
   const el = document.getElementById(id);
   if (!el) return;
   const open = el.style.display === 'block';
   el.style.display = open ? 'none' : 'block';
-  if (!open && id === 'params-panel') renderParams();
+  if (!open && id === 'params-panel') {
+    renderParams();
+    actualizarWorkflow('informacion');
+  }
   if (!open && id === 'results-panel') {
-    if (!calculado) { setStatus('Primero presione Calcular.', 'err'); el.style.display = 'none'; return; }
+    if (!calculado) {
+      setStatus('Primero presione Calcular diseño.', 'err');
+      el.style.display = 'none';
+      return;
+    }
     renderResults();
+    actualizarWorkflow('resultados');
   }
 }
-
 function entrarApp() {
   const app = document.getElementById('app');
   if (app) app.scrollIntoView({behavior:'smooth', block:'start'});
@@ -357,6 +371,7 @@ function calcular() {
   const rp = document.getElementById('results-panel');
   if (rp && rp.style.display === 'block') renderResults();
 
+  actualizarWorkflow('resultados');
   setStatus('✅ Cálculo completado.', 'ok');
 }
 
@@ -1305,3 +1320,26 @@ function loop() {
 
 loop();
 setMetodo('esal');
+// ============================================================
+//  ACTUALIZAR STEPPER (workflow)
+// ============================================================
+
+function actualizarWorkflow(paso) {
+  const pasos = document.querySelectorAll('.workflow .step');
+  if (!pasos.length) return;
+
+  // Mapa: paso lógico → índice (0-based)
+  const mapa = {
+    informacion: 0,
+    transito: 1,
+    subrasante: 2,
+    diseno: 3,
+    resultados: 4
+  };
+
+  const activo = mapa[paso] !== undefined ? mapa[paso] : 0;
+
+  pasos.forEach((el, i) => {
+    el.classList.toggle('active', i === activo);
+  });
+}
