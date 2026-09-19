@@ -37,6 +37,14 @@ let transito = {
     factorDireccional: 0.50,
     carril: 0.50
 };
+let vehiculos = {
+    bus: 200,
+    c2: 150,
+    c3: 100,
+    c4: 80,
+    c5: 60,
+    c6: 40
+};
 function setStatus(msg, cls) {
   const el = document.getElementById('status-txt');
   el.innerHTML = cls ? `<span class="${cls}">${msg}</span>` : msg;
