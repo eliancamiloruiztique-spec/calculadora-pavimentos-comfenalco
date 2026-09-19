@@ -144,23 +144,80 @@ function renderParams() {
 
 function renderTransitoParams() {
   const grid = document.getElementById('transito-grid');
+
+  if (!grid) return;
+
   const fields = [
-    { k: 'factorCamion', label: '% de camiones (ponderado)', val: transito.factorCamion * 100, cb: v => transito.factorCamion = v / 100 },
-    { k: 'factorCrec', label: 'Tasa crecimiento anual (%)', val: transito.factorCrec * 100, cb: v => transito.factorCrec = v / 100 },
-    { k: 'anios', label: 'Período de diseño (años)', val: transito.anios, cb: v => transito.anios = v },
-    { k: 'factorEjes', label: 'Factor de ejes equivalentes', val: transito.factorEjes, cb: v => transito.factorEjes = v },
-    { k: 'carril', label: 'Factor distribución por carril', val: transito.carril, cb: v => transito.carril = v },
+    {
+      k: 'TPD',
+      label: 'TPD — Tránsito promedio diario (veh/día)',
+      val: transito.TPD,
+      cb: v => transito.TPD = v
+    },
+    {
+      k: 'factorCamion',
+      label: '% de vehículos comerciales',
+      val: transito.factorCamion * 100,
+      cb: v => transito.factorCamion = v / 100
+    },
+    {
+      k: 'factorCrec',
+      label: 'Tasa de crecimiento anual (%)',
+      val: transito.factorCrec * 100,
+      cb: v => transito.factorCrec = v / 100
+    },
+    {
+      k: 'anios',
+      label: 'Período de diseño (años)',
+      val: transito.anios,
+      cb: v => transito.anios = v
+    },
+    {
+      k: 'factorDireccional',
+      label: 'Factor de distribución direccional',
+      val: transito.factorDireccional,
+      cb: v => transito.factorDireccional = v
+    },
+    {
+      k: 'factorEjes',
+      label: 'Factor de ejes equivalentes promedio',
+      val: transito.factorEjes,
+      cb: v => transito.factorEjes = v
+    },
+    {
+      k: 'carril',
+      label: 'Factor de distribución por carril',
+      val: transito.carril,
+      cb: v => transito.carril = v
+    }
   ];
+
   grid.innerHTML = '';
+
   fields.forEach(f => {
     const d = document.createElement('div');
     d.className = 'param-row';
-    d.innerHTML = `<label>${f.label}</label><input type="number" value="${f.val}" step="any">`;
+
+    d.innerHTML = `
+      <label>${f.label}</label>
+      <input
+        type="number"
+        value="${f.val}"
+        step="any"
+      >
+    `;
+
     grid.appendChild(d);
-    d.querySelector('input').addEventListener('change', e => { const v = parseFloat(e.target.value); if (!isNaN(v)) f.cb(v); });
+
+    d.querySelector('input').addEventListener('change', e => {
+      const v = parseFloat(e.target.value);
+
+      if (!isNaN(v)) {
+        f.cb(v);
+      }
+    });
   });
 }
-
 function renderVehiculosGrid() {
   const grid = document.getElementById('vehiculos-grid');
   const tipos = [{ k: 'bus', label: 'Bus' }, { k: 'c2', label: 'C2' }, { k: 'c3', label: 'C3' }, { k: 'c4', label: 'C4' }, { k: 'c5', label: 'C5' }, { k: 'c6', label: 'C6' }];
