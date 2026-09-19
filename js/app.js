@@ -360,18 +360,43 @@ function getZR(R) {
 }
 
 function calcular() {
+
   if (metodo === 'transito') {
+
     const esal = calcularESALdesdeTransito();
-    if (tipo === 'flexible') pf.W18 = esal;
-    else pr.W18 = esal;
-    setStatus('ESAL calculado desde tránsito: ' + esal.toExponential(2), 'info');
+
+    if (esal === null) {
+      calculado = false;
+      return;
+    }
+
+    if (tipo === 'flexible') {
+      pf.W18 = esal;
+    } else {
+      pr.W18 = esal;
+    }
+
+    setStatus(
+      'ESAL calculado desde transito: ' + esal.toLocaleString('es-CO'),
+      'info'
+    );
   }
-  if (tipo === 'flexible') calcularFlexible();
-  else calcularRigido();
+
+  if (tipo === 'flexible') {
+    calcularFlexible();
+  } else {
+    calcularRigido();
+  }
+
   calculado = true;
+
   const rp = document.getElementById('results-panel');
-  if (rp.style.display === 'block') renderResults();
-  setStatus('✅ Cálculo completado.', 'ok');
+
+  if (rp && rp.style.display === 'block') {
+    renderResults();
+  }
+
+  setStatus('Calculo completado.', 'ok');
 }
 
 function calcularFlexible() {
