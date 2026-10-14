@@ -272,6 +272,7 @@ function obtenerSugerencia(){
   }
 
   return { cbr, parametroBase, app, claseSeleccionada, especifClase1, traslape, requerimientosApp, color, emoji, titulo, resumen };
+   }
   /* ================================================================
    DESCRIPCIÓN TÉCNICA DEL GEOTEXTIL RECOMENDADO
 ================================================================ */
@@ -1975,4 +1976,5 @@ function drawScene(){
 function loop(){animT+=1;nubeOff=(nubeOff+0.45)%(W+140);drawScene();requestAnimationFrame(loop);}
 loop();
 setMetodo('esal');
-}
+
+
