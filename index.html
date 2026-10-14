@@ -3,120 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diseño de Pavimento AASHTO-93 · M288-00 · Estabilización Química — Online</title>
-<meta name="description" content="Herramienta online gratuita para el diseño de pavimentos flexibles y rígidos por el método AASHTO-93, con especificación de geosintéticos AASHTO M288-00 y estabilización química de suelos (AASHTO M216/M85).">
+<title>Diseño de Pavimentos AASHTO-93 · M288-00 · Estabilización Química</title>
+<meta name="description" content="Plataforma online gratuita para el diseño de pavimentos flexibles y rígidos por el método AASHTO-93, con especificación de geosintéticos AASHTO M288-00 y estabilización química de suelos.">
 <meta name="author" content="Fundación Universitaria Tecnológico Comfenalco">
-<meta name="keywords" content="AASHTO-93, pavimento flexible, pavimento rígido, ESAL, M288-00, geotextil, estabilización química, cal, cemento, juntas, dóvelas, amarres">
-<meta property="og:title" content="Diseño de Pavimento AASHTO-93 — Online">
+<meta name="keywords" content="AASHTO-93, pavimento flexible, pavimento rígido, ESAL, M288-00, geotextil, estabilización química, cal, cemento, juntas, dóvelas, amarres, ingeniería civil">
+<meta property="og:title" content="Diseño de Pavimentos AASHTO-93 — Plataforma Online">
 <meta property="og:description" content="Calcula pavimentos flexibles y rígidos con AASHTO-93, geotextiles M288-00 y estabilización química.">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
 
-<div id="portada">
-  <div class="portada-box">
-    <div class="logo">⛰️ INGENIERÍA CIVIL</div>
-    <h1>DISEÑO DE PAVIMENTOS</h1>
-    <div class="sub">Método AASHTO-93 · Geosintéticos M288-00 · Estabilización Química</div>
-    <div class="vers">v5.3 · Acceso libre</div>
-    <div class="desc">
-      <strong>Herramienta gratuita</strong> para el diseño de pavimentos flexibles y rígidos.<br><br>
-      <strong>Diseño AASHTO-93:</strong> Flexible / Rígido<br>
-      <strong>Tránsito:</strong> ESAL directo o TPD → ESAL<br>
-      <strong>Geosintéticos:</strong> AASHTO M288-00 (Tablas 1–7 + A1)<br>
-      <strong>Estabilización química:</strong> AASHTO M216 (cal) · M85 (cemento) · T220<br>
-      <strong>Juntas y acero:</strong> Predimensionamiento de dóvelas y amarres<br><br>
-      • Cálculo automático de espesores<br>
-      • Visualización animada de la sección bajo carga<br>
-      • Descripción técnica del geotextil recomendado<br>
-      • Generación de informe técnico (imprimir / PDF)<br><br>
-      <em style="color:var(--text3);">Herramienta académica y de referencia. El diseño definitivo debe ser validado por un ingeniero responsable.</em>
+<!-- ================= LANDING ================= -->
+<div id="landing">
+
+  <nav class="nav">
+    <a href="#" class="nav-logo" onclick="volverHome();return false;">
+      <span class="logo-icon">🛣️</span>
+      <span class="logo-text">DP · Diseño de Pavimentos</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Características</a>
+      <a href="#normas">Normas</a>
+      <a href="#acerca">Acerca</a>
+      <button class="nav-cta" onclick="nuevoProyecto()">+ Nuevo Proyecto</button>
     </div>
-    <button class="btn-entrar" onclick="entrarApp()">▶ COMENZAR DISEÑO</button>
-  </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">v5.3 · AASHTO-93 · M288-00 · M216 / M85</div>
+    <h1>Diseño de Pavimentos</h1>
+    <h2>Plataforma profesional para el cálculo de estructuras de pavimento flexible y rígido</h2>
+    <p>
+      Herramienta web de acceso libre basada en el método <strong>AASHTO-93</strong>, complementada con la
+      especificación de geosintéticos <strong>AASHTO M288-00</strong> y el diseño de estabilización
+      química del suelo según <strong>AASHTO M216 / M85 / T220</strong>. Diseña, calcula, especifica y
+      genera informes técnicos en minutos.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="nuevoProyecto()">🚀 Nuevo Proyecto</button>
+      <a href="#features" class="btn-secondary">📖 Conocer más</a>
+    </div>
+    <div class="hero-stats">
+      <div><strong>2</strong><span>Tipos de pavimento</span></div>
+      <div><strong>7</strong><span>Tablas M288-00</span></div>
+      <div><strong>12</strong><span>Clasificaciones AASHTO</span></div>
+      <div><strong>1</strong><span>Informe técnico</span></div>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="section-header">
+      <h2>¿Qué puedes hacer?</h2>
+      <p>Todo lo que necesitas para el diseño completo de tu pavimento en una sola plataforma.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧮</div>
+        <h3>AASHTO-93 Flexible</h3>
+        <p>Cálculo del Número Estructural (SN) y espesores por capas: carpeta asfáltica, base y subbase granular.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧱</div>
+        <h3>AASHTO-93 Rígido</h3>
+        <p>Determinación del espesor de losa de concreto hidráulico y base granular, con verificación de fatiga.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚦</div>
+        <h3>Análisis de Tránsito</h3>
+        <p>Cálculo de ESAL (W18) desde TPD, conteo vehicular, tasa de crecimiento y período de diseño.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧵</div>
+        <h3>Geosintéticos M288-00</h3>
+        <p>Selección automática de geotextil (Clase 1, 2 o 3) según el CBR de la subrasante, con especificaciones completas.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧪</div>
+        <h3>Estabilización Química</h3>
+        <p>Recomendación de cal, cemento o tratamiento combinado según la clasificación AASHTO del suelo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔩</div>
+        <h3>Juntas y Acero</h3>
+        <p>Predimensionamiento de pasadores (dóvelas), barras de amarre, tramos y cantidades por km.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Informe Técnico</h3>
+        <p>Generación automática de informe imprimible / PDF con todos los cálculos y especificaciones normativas.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Visualización Animada</h3>
+        <p>Sección transversal en tiempo real mostrando la deformación del pavimento bajo carga vehicular.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="normas" class="section section-alt">
+    <div class="section-header">
+      <h2>Normas aplicadas</h2>
+      <p>Todas las especificaciones están respaldadas por normas internacionales vigentes.</p>
+    </div>
+    <div class="normas-grid">
+      <div class="norma-card"><div class="norma-code">AASHTO-93</div><div class="norma-desc">Guide for Design of Pavement Structures</div></div>
+      <div class="norma-card"><div class="norma-code">M 288-00</div><div class="norma-desc">Geosynthetic Specification for Highway Applications</div></div>
+      <div class="norma-card"><div class="norma-code">M 216</div><div class="norma-desc">Quicklime and Hydrated Lime for Soil Stabilization</div></div>
+      <div class="norma-card"><div class="norma-code">M 85</div><div class="norma-desc">Portland Cement</div></div>
+      <div class="norma-card"><div class="norma-code">T 220</div><div class="norma-desc">Strength of Soil–Lime Mixtures</div></div>
+      <div class="norma-card"><div class="norma-code">T 99 / T 180</div><div class="norma-desc">Moisture-Density Relations of Soils</div></div>
+      <div class="norma-card"><div class="norma-code">ASTM D-series</div><div class="norma-desc">Ensayos de geotextiles y estabilización</div></div>
+      <div class="norma-card"><div class="norma-code">INVÍAS Art. 500</div><div class="norma-desc">Especificación colombiana de pavimentos</div></div>
+    </div>
+  </section>
+
+  <section id="acerca" class="section">
+    <div class="section-header">
+      <h2>Acerca de la plataforma</h2>
+    </div>
+    <div class="about-content">
+      <p>
+        Esta plataforma fue desarrollada en el marco de la asignatura <strong>Diseño de Pavimentos</strong>
+        de la <strong>Fundación Universitaria Tecnológico Comfenalco</strong>, con el objetivo de
+        ofrecer una herramienta libre, rápida y precisa para estudiantes y profesionales de ingeniería civil.
+      </p>
+      <p>
+        Todo el procesamiento ocurre directamente en tu navegador — <strong>no se envían datos a ningún servidor</strong>.
+        Puedes usarla sin conexión, sin registro y sin costo alguno.
+      </p>
+      <div class="about-actions">
+        <button class="btn-primary" onclick="nuevoProyecto()">🚀 Empezar un nuevo proyecto</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <strong>🛣️ Diseño de Pavimentos v5.3</strong>
+        <p>AASHTO-93 · M288-00 · M216/M85 · T220</p>
+      </div>
+      <div>
+        <strong>Fundación Universitaria Tecnológico Comfenalco</strong>
+        <p>Asignatura: Diseño de Pavimentos · Uso académico</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      ⚠️ Herramienta académica de referencia. Todo diseño debe ser validado por un ingeniero civil responsable.
+    </div>
+  </footer>
+
 </div>
 
-<div id="app" style="display:none;">
-  <div class="app-header">
-    <div>
-      <div class="app-title">AASHTO-93 — DISEÑO DE PAVIMENTO</div>
-      <div class="app-subtitle">Flexible &amp; Rígido · M288-00 · Estabilización Química · v5.3</div>
-    </div>
-    <div class="tipo-badge" id="hdr-tipo">FLEXIBLE</div>
+<!-- ================= CALCULADORA ================= -->
+<div id="calculadora" style="display:none;">
+
+  <div class="calc-topbar">
+    <button class="calc-back" onclick="volverHome()">← Inicio</button>
+    <div class="calc-title">🧮 Diseño de Pavimento — AASHTO-93</div>
+    <button class="calc-new" onclick="nuevoProyecto()">+ Nuevo</button>
   </div>
 
-  <div id="cv-wrap">
-    <canvas id="cv" width="900" height="260"></canvas>
-  </div>
-
-  <div class="menu-bar">
-    <button class="mbtn active" id="btn-flex" onclick="setTipo('flexible')">Flexible</button>
-    <button class="mbtn" id="btn-rig" onclick="setTipo('rigido')">Rígido</button>
-    <button class="mbtn" onclick="togglePanel('params-panel')">⚙ Parámetros</button>
-    <button class="mbtn calc" onclick="calcular()">▶ Calcular</button>
-    <button class="mbtn" onclick="togglePanel('results-panel')">≡ Resultados</button>
-    <button class="mbtn" onclick="togglePanel('juntas-panel')">🔩 Juntas y Acero</button>
-    <button class="mbtn" onclick="togglePanel('m288-panel')">🧵 Geotextiles M288</button>
-    <button class="mbtn" onclick="togglePanel('quimica-panel')">🧪 Estabilización Química</button>
-    <button class="mbtn informe" onclick="generarInforme()">📄 Informe Técnico</button>
-    <button class="mbtn" onclick="ejemploFlex()">Ejemplo flex.</button>
-    <button class="mbtn" onclick="ejemploRig()">Ejemplo ríg.</button>
-  </div>
-
-  <div class="status-bar"><span id="status-txt">AASHTO-93 v5.3 · M288-00 · Seleccione tipo y presione Calcular</span></div>
-
-  <div class="panel" id="params-panel">
-    <h3 id="params-title">Parámetros – flexible</h3>
-    <div class="param-group">
-      <div class="group-title">Método de tránsito</div>
-      <div class="transito-method">
-        <button class="mbtn active" id="metodo-esal" onclick="setMetodo('esal')">ESAL (W18)</button>
-        <button class="mbtn" id="metodo-transito" onclick="setMetodo('transito')">Tránsito (TPD → ESAL)</button>
+  <div id="app" style="display:block;">
+    <div class="app-header">
+      <div>
+        <div class="app-title">AASHTO-93 — DISEÑO DE PAVIMENTO</div>
+        <div class="app-subtitle">Flexible &amp; Rígido · M288-00 · Estabilización Química · v5.3</div>
       </div>
+      <div class="tipo-badge" id="hdr-tipo">FLEXIBLE</div>
     </div>
-    <div id="params-grid"></div>
-    <div id="transito-params" style="display:none;" class="param-group">
-      <div class="group-title">Parámetros de tránsito y conteo vehicular</div>
-      <div class="param-grid" id="transito-grid"></div>
-      <div style="margin-top:12px;">
-        <div class="group-title" style="margin-bottom:4px;">Conteo vehicular comercial (TPD)</div>
-        <div class="vehiculos-grid" id="vehiculos-grid"></div>
-        <div style="margin-top:8px;font-size:10px;color:var(--text3);font-family:var(--mono);">
-          <span id="total-vehiculos">Total vehículos comerciales: 0</span>
+
+    <div id="cv-wrap">
+      <canvas id="cv" width="900" height="260"></canvas>
+    </div>
+
+    <div class="menu-bar">
+      <button class="mbtn active" id="btn-flex" onclick="setTipo('flexible')">Flexible</button>
+      <button class="mbtn" id="btn-rig" onclick="setTipo('rigido')">Rígido</button>
+      <button class="mbtn" onclick="togglePanel('params-panel')">⚙ Parámetros</button>
+      <button class="mbtn calc" onclick="calcular()">▶ Calcular</button>
+      <button class="mbtn" onclick="togglePanel('results-panel')">≡ Resultados</button>
+      <button class="mbtn" onclick="togglePanel('juntas-panel')">🔩 Juntas y Acero</button>
+      <button class="mbtn" onclick="togglePanel('m288-panel')">🧵 Geotextiles M288</button>
+      <button class="mbtn" onclick="togglePanel('quimica-panel')">🧪 Estabilización Química</button>
+      <button class="mbtn informe" onclick="generarInforme()">📄 Informe Técnico</button>
+      <button class="mbtn" onclick="ejemploFlex()">Ejemplo flex.</button>
+      <button class="mbtn" onclick="ejemploRig()">Ejemplo ríg.</button>
+    </div>
+
+    <div class="status-bar"><span id="status-txt">AASHTO-93 v5.3 · M288-00 · Seleccione tipo y presione Calcular</span></div>
+
+    <div class="panel" id="params-panel">
+      <h3 id="params-title">Parámetros – flexible</h3>
+      <div class="param-group">
+        <div class="group-title">Método de tránsito</div>
+        <div class="transito-method">
+          <button class="mbtn active" id="metodo-esal" onclick="setMetodo('esal')">ESAL (W18)</button>
+          <button class="mbtn" id="metodo-transito" onclick="setMetodo('transito')">Tránsito (TPD → ESAL)</button>
         </div>
       </div>
+      <div id="params-grid"></div>
+      <div id="transito-params" style="display:none;" class="param-group">
+        <div class="group-title">Parámetros de tránsito y conteo vehicular</div>
+        <div class="param-grid" id="transito-grid"></div>
+        <div style="margin-top:12px;">
+          <div class="group-title" style="margin-bottom:4px;">Conteo vehicular comercial (TPD)</div>
+          <div class="vehiculos-grid" id="vehiculos-grid"></div>
+          <div style="margin-top:8px;font-size:10px;color:var(--text3);font-family:var(--mono);">
+            <span id="total-vehiculos">Total vehículos comerciales: 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="formula-box" id="formula-box"></div>
     </div>
-    <div class="formula-box" id="formula-box"></div>
+
+    <div class="panel" id="results-panel">
+      <h3 id="res-title">Resultados del diseño</h3>
+      <div class="res-grid" id="res-grid"></div>
+      <table class="capas-table" id="capas-table"></table>
+      <div id="sugerencia-resultado" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="panel" id="juntas-panel">
+      <h3>Juntas, Pasadores (Dóvelas) y Barras de Amarre — Pavimento Rígido</h3>
+      <div class="jn-actions"><button class="mbtn" onclick="descargarJuntasPNG()">⬇ Descargar imagen (PNG)</button></div>
+      <canvas id="jn-cv" width="2000" height="1432"></canvas>
+      <div id="jn-content" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel" id="m288-panel">
+      <h3>Especificación de Geosintéticos — AASHTO M288-00</h3>
+      <div id="m288-content"></div>
+    </div>
+
+    <div class="panel" id="quimica-panel">
+      <h3>Estabilización Química del Suelo — AASHTO M216 / M85 / T220</h3>
+      <div id="quimica-content"></div>
+    </div>
+
+    <div class="app-footer">
+      AASHTO Guide for Design of Pavement Structures (1993) · AASHTO M288-00 · AASHTO M216 · AASHTO M85 · ASTM D-series · Solo uso académico
+    </div>
   </div>
 
-  <div class="panel" id="results-panel">
-    <h3 id="res-title">Resultados del diseño</h3>
-    <div class="res-grid" id="res-grid"></div>
-    <table class="capas-table" id="capas-table"></table>
-    <div id="sugerencia-resultado" style="margin-top:16px;"></div>
-  </div>
-
-  <div class="panel" id="juntas-panel">
-    <h3>Juntas, Pasadores (Dóvelas) y Barras de Amarre — Pavimento Rígido</h3>
-    <div class="jn-actions"><button class="mbtn" onclick="descargarJuntasPNG()">⬇ Descargar imagen (PNG)</button></div>
-    <canvas id="jn-cv" width="2000" height="1432"></canvas>
-    <div id="jn-content" style="margin-top:14px;"></div>
-  </div>
-
-  <div class="panel" id="m288-panel">
-    <h3>Especificación de Geosintéticos — AASHTO M288-00</h3>
-    <div id="m288-content"></div>
-  </div>
-
-  <div class="panel" id="quimica-panel">
-    <h3>Estabilización Química del Suelo — AASHTO M216 / M85 / T220</h3>
-    <div id="quimica-content"></div>
-  </div>
-
-  <div class="app-footer">
-    AASHTO Guide for Design of Pavement Structures (1993) · AASHTO M288-00 · AASHTO M216 · AASHTO M85 · ASTM D-series · Solo uso académico
-  </div>
 </div>
 
 <script src="app.js"></script>
