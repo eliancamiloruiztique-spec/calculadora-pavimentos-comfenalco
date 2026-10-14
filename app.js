@@ -726,11 +726,20 @@ function togglePanel(id){
   if(!open && id==='quimica-panel') renderQuimica();
 }
 
-function entrarApp(){
-  document.getElementById('portada').classList.add('hidden');
-  document.getElementById('app').style.display='block';
-  drawScene();
+function nuevoProyecto(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('calculadora').style.display='block';
+  window.scrollTo(0,0);
+  setTimeout(function(){ drawScene(); }, 50);
 }
+
+function volverHome(){
+  document.getElementById('landing').style.display='block';
+  document.getElementById('calculadora').style.display='none';
+  window.scrollTo(0,0);
+}
+
+function entrarApp(){ nuevoProyecto(); }
 
 /* ================================================================
    CÁLCULO DE ESAL DESDE TRÁNSITO
