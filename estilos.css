@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#0f1117; --bg2:#181c27; --bg3:#1f2435;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --accent:#3b82f6; --accent2:#60a5fa; --green:#22c55e; --amber:#f59e0b;
+  --red:#ef4444; --purple:#a855f7;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#64748b;
+  --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+}
+/* ... el resto igual que el original ... */
